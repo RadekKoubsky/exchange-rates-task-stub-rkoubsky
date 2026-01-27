@@ -29,6 +29,12 @@ public class ExchangeRatesApiClientImpl implements ExchangeRatesApiClient {
     @Override
     @Cacheable(cacheNames = "exchangeRates")
     public ExchangeRatesApiDto getRates(String baseCurrency, LocalDate date) {
+        /*
+        * TODO Add retry logic if fixer service does not respond.
+        *
+        * E.g. using resilience4j library
+        *
+        * */
         logger.info("Fetching exchange rates from fixer for {} on {}", baseCurrency, date);
         try {
             HttpUrl url = getBaseUrl()
