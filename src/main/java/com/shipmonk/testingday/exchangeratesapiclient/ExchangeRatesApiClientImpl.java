@@ -37,19 +37,10 @@ public class ExchangeRatesApiClientImpl implements ExchangeRatesApiClient {
         * */
         logger.info("Fetching exchange rates from fixer for {} on {}", baseCurrency, date);
         try {
-            HttpUrl url = getBaseUrl()
-                .addPathSegment(date.toString())
-                .addQueryParameter("base", baseCurrency)
-                .build();
-
-            Request request = new Request.Builder()
-                .url(url)
-                .header("Accept", "application/json")
-                .build();
-
+            Request request = getRequest(baseCurrency, date);
             try (Response response = client.newCall(request).execute()) {
                 if (!response.isSuccessful()) {
-                    throw new ExchangeRatesClientException("Unexpected code " + response);
+                    throw new ExchangeRatesClientException("Failed to fetch exchange rates: " + response.body().string());
                 }
 
                 var exchangeRatesDto = objectMapper.readValue(response.body().byteStream(), ExchangeRatesApiDto.class);
@@ -77,5 +68,17 @@ public class ExchangeRatesApiClientImpl implements ExchangeRatesApiClient {
             builder.port(properties.port());
         }
         return builder;
+    }
+
+    private Request getRequest(String baseCurrency, LocalDate date) {
+        HttpUrl url = getBaseUrl()
+            .addPathSegment(date.toString())
+            .addQueryParameter("base", baseCurrency)
+            .build();
+
+        return new Request.Builder()
+            .url(url)
+            .header("Accept", "application/json")
+            .build();
     }
 }
