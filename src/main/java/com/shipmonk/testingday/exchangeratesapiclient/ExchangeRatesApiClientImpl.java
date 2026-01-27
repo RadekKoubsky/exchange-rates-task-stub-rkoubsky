@@ -62,11 +62,14 @@ public class ExchangeRatesApiClientImpl implements ExchangeRatesApiClient {
     }
 
     private HttpUrl.Builder getBaseUrl() {
-        return new HttpUrl.Builder()
+        var builder = new HttpUrl.Builder()
             .scheme(properties.scheme())
             .host(properties.host())
             .addPathSegment("api")
             .addQueryParameter("access_key", properties.accessKey());
+        if (properties.port() != null) {
+            builder.port(properties.port());
+        }
+        return builder;
     }
 }
-

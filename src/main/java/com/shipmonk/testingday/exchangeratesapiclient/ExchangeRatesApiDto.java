@@ -8,7 +8,7 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record ExchangeRatesApiDto (
     Boolean success,
-    FixerError error,
+    ApiError error,
     String base,
     LocalDate date,
     Map<String, String> rates

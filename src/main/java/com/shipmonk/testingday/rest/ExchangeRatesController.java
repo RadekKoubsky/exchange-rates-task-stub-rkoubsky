@@ -6,10 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
@@ -25,10 +22,10 @@ public class ExchangeRatesController {
     private final ExchangeRatesRestMapper mapper;
 
     @RequestMapping(method = RequestMethod.GET, path = "/{day}")
-    public ResponseEntity<ExchangesRatesDto> getRates(@PathVariable("day") String day)
+    public ResponseEntity<ExchangesRatesDto> getRates(@PathVariable("day") String day, @RequestParam String baseCurrency)
     {
         return new ResponseEntity<>(
-            mapper.map(exchangeRatesService.getRates("EUR", LocalDate.parse(day))),
+            mapper.map(exchangeRatesService.getRates(baseCurrency, LocalDate.parse(day))),
             HttpStatus.OK
         );
     }
