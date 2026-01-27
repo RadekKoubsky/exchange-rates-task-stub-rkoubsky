@@ -22,13 +22,13 @@ public class ExchangeRatesController {
     private static final Logger logger = LoggerFactory.getLogger(ExchangeRatesController.class.getName());
 
     private final ExchangeRatesService exchangeRatesService;
+    private final ExchangeRatesRestMapper mapper;
 
     @RequestMapping(method = RequestMethod.GET, path = "/{day}")
-    public ResponseEntity<Object> getRates(@PathVariable("day") String day)
+    public ResponseEntity<ExchangesRatesDto> getRates(@PathVariable("day") String day)
     {
-        logger.info("Received request for rates for day: {}", day);
         return new ResponseEntity<>(
-            exchangeRatesService.getRates("USD", LocalDate.parse(day)),
+            mapper.map(exchangeRatesService.getRates("EUR", LocalDate.parse(day))),
             HttpStatus.OK
         );
     }

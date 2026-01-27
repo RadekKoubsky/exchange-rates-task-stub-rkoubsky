@@ -1,11 +1,9 @@
-package com.shipmonk.testingday.service.model;
+package com.shipmonk.testingday.rest;
 
 import java.time.LocalDate;
 import java.util.Map;
-import java.util.UUID;
 
-public record ExchangeRates(
-    UUID id,
+public record ExchangesRatesDto (
     String baseCurrency,
     LocalDate date,
     Map<String, String> rates

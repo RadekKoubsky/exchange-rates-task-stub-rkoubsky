@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Map;
 
@@ -39,16 +38,22 @@ public class ExchangeRatesIntegrationTest {
 
     @Test
     void whenGetRatesWithCorrectDate_thenReturnRates() throws Exception {
+        Map<String, String> rates = Map.of(
+            "CZK", "24.243035",
+            "DJF", "211.130875",
+            "DKK", "7.468154",
+            "DOP", "74.812701"
+        );
         exchangeRatesService.create(new ExchangeRates(
-            null, "USD", LocalDate.parse("2026-01-26"), Map.of("CZK", new BigDecimal("24.274776"))
-        ));
+            null, "USD", LocalDate.parse("2026-01-26"), rates)
+        );
 
         ResponseEntity<String> response = restTemplate
             .getForEntity("/api/v1/rates/2026-01-26", String.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         var body = response.getBody();
-        Assertions.assertThat(body).contains("24.27");
+        Assertions.assertThat(body).contains("24.24");
 
     }
 }

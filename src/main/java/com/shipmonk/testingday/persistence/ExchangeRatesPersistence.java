@@ -19,7 +19,7 @@ public class ExchangeRatesPersistence {
         return exchangeRatesEntity.map(rates -> mapper.mapEntity(rates));
     }
 
-    public void create(ExchangeRates exchangeRates) {
-        exchangeRatesRepository.save(mapper.mapRates(exchangeRates));
+    public ExchangeRates create(ExchangeRates exchangeRates) {
+        return mapper.mapEntity(exchangeRatesRepository.save(mapper.mapRates(exchangeRates)));
     }
 }

@@ -1,3 +1,4 @@
 ### GET request to example server
 GET https://data.fixer.io/api/2026-01-26
-    ?access_key=83959865b7761742ab9de3dbf8c16bf3&base=EUR
+    ?access_key=83959865b7761742ab9de3dbf8c16bf3&base=USD
+
