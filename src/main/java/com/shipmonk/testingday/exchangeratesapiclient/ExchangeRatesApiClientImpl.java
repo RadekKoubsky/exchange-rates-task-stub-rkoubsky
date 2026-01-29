@@ -40,21 +40,22 @@ public class ExchangeRatesApiClientImpl implements ExchangeRatesApiClient {
             Request request = getRequest(baseCurrency, date);
             try (Response response = client.newCall(request).execute()) {
                 if (!response.isSuccessful()) {
-                    throw new ExchangeRatesClientException("Failed to fetch exchange rates: " + response.body().string());
+                    logger.error("Failed to fetch exchange rates: {}", response.body().string());
+                    throw new ExchangeRatesClientException();
                 }
 
                 var exchangeRatesDto = objectMapper.readValue(response.body().byteStream(), ExchangeRatesApiDto.class);
 
                 if (Boolean.FALSE.equals(exchangeRatesDto.success())) {
                     logger.error("Failed to fetch exchange rates: {}", exchangeRatesDto.error());
-                    throw new ExchangeRatesClientException("Failed to fetch exchange rates");
+                    throw new ExchangeRatesClientException();
                 }
 
                 return exchangeRatesDto;
             }
         } catch (Exception exception) {
             logger.error("Failed to fetch exchange rates", exception);
-            throw new ExchangeRatesClientException("Failed to fetch exchange rates");
+            throw new ExchangeRatesClientException();
         }
     }
 

@@ -76,4 +76,6 @@ public class ExchangeRatesIntegrationTest {
         Assertions.assertThat(exchangeRatesDto).isEqualTo(new ExchangesRatesDto(currency, now, rates));
 
     }
+
+    // TODO Let LLM write other test cases based on the first test.
 }

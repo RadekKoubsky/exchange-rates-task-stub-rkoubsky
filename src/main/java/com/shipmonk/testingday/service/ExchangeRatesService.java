@@ -8,17 +8,19 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
 @Component
 @RequiredArgsConstructor
 public class ExchangeRatesService {
-    private final Logger logger = LoggerFactory.getLogger(ExchangeRatesService.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(ExchangeRatesService.class);
 
     private final ExchangeRatesPersistence exchangeRatesPersistence;
     private final ExchangeRatesApiClient exchangeRatesApiClient;
 
+    @Transactional
     public ExchangeRates getRates(String baseCurrency, LocalDate date) {
         return exchangeRatesPersistence.getRates(baseCurrency, date).orElseGet(() -> {
             logger.info("Rates not found for {} on {}, fetching data from exchange rates api", baseCurrency, date);
