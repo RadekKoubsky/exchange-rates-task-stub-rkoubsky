@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.concurrent.TimeUnit;
 
@@ -39,21 +40,16 @@ public class ExchangeRatesApiClientImpl implements ExchangeRatesApiClient {
         try {
             Request request = getRequest(baseCurrency, date);
             try (Response response = client.newCall(request).execute()) {
-                if (!response.isSuccessful()) {
-                    logger.error("Failed to fetch exchange rates: {}", response.body().string());
-                    throw new ExchangeRatesClientException();
-                }
-
                 var exchangeRatesDto = objectMapper.readValue(response.body().byteStream(), ExchangeRatesApiDto.class);
 
                 if (Boolean.FALSE.equals(exchangeRatesDto.success())) {
                     logger.error("Failed to fetch exchange rates: {}", exchangeRatesDto.error());
-                    throw new ExchangeRatesClientException();
+                    throw new ExchangeRatesClientException(exchangeRatesDto.error());
                 }
 
                 return exchangeRatesDto;
             }
-        } catch (Exception exception) {
+        } catch (IOException exception) {
             logger.error("Failed to fetch exchange rates", exception);
             throw new ExchangeRatesClientException();
         }
